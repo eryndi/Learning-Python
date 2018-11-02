@@ -7,7 +7,7 @@ def leap_year(year):
     except TypeError:
         print("Error during conversion, wrong value")
     finally:
-        print("After keyword finally code is always executed no matter what")
+        print("After expression <<finally code>> is always executed no matter what")
     if (year % 400) == 0 or (year % 100 != 0 and year % 4 == 0):
         return True
     else:
