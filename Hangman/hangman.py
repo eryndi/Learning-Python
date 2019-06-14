@@ -2,51 +2,81 @@
 
 import functions
 import data
-
+import pickle
+from random import randrange
 
 class Player:
     def __init__(self, name):
         self.name = name
         self.score = functions.get_score(name)
+        print("Welcome", self.name, "your score:", self.score)
+
+    def save_score(self):
+        # scores = {"name": playerName, "score": 0}
+        with open("scores", "rb") as file:
+            pickler = pickle.Unpickler(file)
+            scores = pickler.load()
+            print(scores)
+
+        scores.setdefault(self.name, self.name)
+        scores[self.name] = self.score
+        # scores.dump(scores)
+
+        with open("scores", "wb") as file:
+            pickler = pickle.Pickler(file)
+            pickler.dump(scores)
+
+        with open("scores", "rb") as f:
+            pickler = pickle.Unpickler(f)
+            foo = pickler.load()
+            print(foo)
 
 
 class Hangman:
     def __init__(self, wordList):
         self.answer = str(functions.get_random_word(wordList)).lower()
-        self.residual = self.answer[:]
+        self.used = []
         self.rounds = len(self.answer)
-        self.guess = "*" * self.rounds
-        print("Let's play!")
+        self.riddle = "*" * self.rounds
+        print("Let's play! this is your riddle", self.riddle)
+        print(self.answer)
 
-    def update_guess(self, shot):
-        if shot in self.residual:
-            index = self.residual.index(shot)
-            self.guess = self.guess[:index] + shot + self.guess[index + 1:]
-            self.residual = self.residual.replace(shot, "", 1)
-            print("Good guess!, ", self.guess)
+    def give_me_letter(self):
+        r = None
+        while r is None or r in self.used:
+            r = randrange(0, len(self.answer), 1)
+            print(r)
+        self.used.append(r)
+        self.update_riddle(r)
+
+    def guess_answer(self, round):
+        if input("Type your guess:").lower() == self.answer:
+            score = self.rounds - round
+            player.score += score
+            print("Congratulations you won! You scored", score, "points, your all time total is", player.score)
+            return True
         else:
-            print("Sorry", shot, "is not there, try again")
+            return False
 
-    def validate_guess(self):
-        print("This is your riddle: ", self.guess)
-        while True:
-            shot = input("What's your guess?")
-            if len(shot) > 1:
-                print("You can guess only one letter per round.")
-                continue
-            if not shot.isalpha():
-                print("Your guess in not a valid character")
-                continue
-            else:
-                return self.update_guess(shot)
+    def update_riddle(self, index):
+        self.riddle = self.riddle[:index] + self.answer[index] + self.riddle[index + 1:]
 
 
 def game(player):
     hangman = Hangman(functions.validate_words(data.word_list))
     for round in range(hangman.rounds):
         print("You have", hangman.rounds - round, "guess(es)", end="")
-        letter = hangman.validate_guess()
-    print("You run out of your guesses, it was", hangman.answer)
+        guessAnswer = input("Do you want to guess the answer? [y/n]").lower()
+        if guessAnswer == "y":
+            if hangman.guess_answer(round) is True:
+                break;
+            else:
+                continue;
+        else:
+            hangman.give_me_letter()
+        print("This was your riddle:", hangman.riddle)
+
+
 
 if __name__ == "__main__":
     print("This is game of hangman, welcome")
@@ -56,7 +86,16 @@ if __name__ == "__main__":
     name = "di"
     player = Player(name)
     print(player.name, player.score)
-    game(player)
+    while True:
+        game(player)
+        restartGame = input("Would you like to start a new game? [y/n]").lower()
+        if restartGame == "y":
+            True
+        else:
+            player.save_score()
+            print("Your score is saved")
+            print("Quiting game...")
+            break;
 
 
 

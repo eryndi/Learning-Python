@@ -17,7 +17,7 @@ def get_score(playerName):
             return scores.get(playerName, 0)
 
     else:
-        scores = {"name": playerName, "score": 0}
+        scores = {playerName: 0}
         with open("scores", "wb") as file:
             pickler = pickle.Pickler(file)
             pickler.dump(scores)
