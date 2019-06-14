@@ -24,17 +24,6 @@ def get_score(playerName):
             return 0
 
 
-def update_scores(playerName):
-    """update scores file before quit"""
-
-
-
-def store_file(file):
-    """store pickled file"""
-
-    pass
-
-
 def get_random_word(wordList):
     index = randrange(1, len(wordList), 1)
     return (wordList[index])
@@ -52,13 +41,6 @@ def validate_words(wordList, char_max=8):
 
     return wordList;
 
-
-def calculate_score():
-    """Calculates score for player
-
-    :return:
-    """
-    pass
 
 def get_player(PlayerName):
     """

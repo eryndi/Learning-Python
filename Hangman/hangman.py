@@ -77,7 +77,6 @@ def game(player):
         print("This was your riddle:", hangman.riddle)
 
 
-
 if __name__ == "__main__":
     print("This is game of hangman, welcome")
     # while True:
@@ -96,6 +95,3 @@ if __name__ == "__main__":
             print("Your score is saved")
             print("Quiting game...")
             break;
-
-
-
